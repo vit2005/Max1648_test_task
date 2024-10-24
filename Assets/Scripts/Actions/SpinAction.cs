@@ -6,12 +6,12 @@ using UnityEngine;
 public class SpinAction : BaseAction
 {
     public delegate void SpinCompleteDelegate();
-     private float totalSpinAmount;
-     
-     //private Action onSpinComplete;
+    private float totalSpinAmount;
 
-     private void Update()
-     {
+    //private Action onSpinComplete;
+
+    private void Update()
+    {
         if (!isActive)
         {
             return;
@@ -23,17 +23,17 @@ public class SpinAction : BaseAction
         totalSpinAmount += spinAddAmount;
         if (totalSpinAmount >= 360f)
         {
-            ActionComplete(); 
+            ActionComplete();
         }
-     }
+    }
 
-      
-     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
-     {      
+
+    public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
+    {
         totalSpinAmount = 0f;
-        
-        ActionStart(onActionComplete); 
-     }
+
+        ActionStart(onActionComplete);
+    }
 
     public override string GetActionName()
     {
@@ -41,29 +41,29 @@ public class SpinAction : BaseAction
     }
 
     public override List<GridPosition> GetValidActionGridPositionList()
-     {
+    {
         GridPosition unitGridPosition = unit.GetGridPosition();
-         
+
 
         return new List<GridPosition>
         {
             unitGridPosition
         };
 
-     }
+    }
 
     public override int GetActionPointsCost()
     {
         return 1;
     }
 
-     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
-     {
-        return new EnemyAIAction 
+    public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
+    {
+        return new EnemyAIAction
         {
             gridPosition = gridPosition,
             actionValue = 0,
         };
-     }
-      
-} 
+    }
+
+}

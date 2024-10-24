@@ -54,10 +54,11 @@ public class InteractSphere : MonoBehaviour, IInteractable
         this.onInteractionComplete = onInteractionComplete;
         isActive = true;
         timer = .5f;
-        if  (isGreen)
+        if (isGreen)
         {
             SetColorRed();
-        } else
+        }
+        else
         {
             SetColorGreen();
         }

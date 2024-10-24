@@ -5,18 +5,18 @@ using UnityEngine;
 public class BulletProjectile : MonoBehaviour
 {
 
-     [SerializeField] private TrailRenderer trailRenderer;
-     [SerializeField] private Transform bulletHitVfxPrefab;
-     private Vector3 targetPosition;
-     public void Setup(Vector3 targetPosition)
-     {
+    [SerializeField] private TrailRenderer trailRenderer;
+    [SerializeField] private Transform bulletHitVfxPrefab;
+    private Vector3 targetPosition;
+    public void Setup(Vector3 targetPosition)
+    {
         this.targetPosition = targetPosition;
-     }
+    }
 
-     private void Update()
-     {
+    private void Update()
+    {
         Vector3 moveDir = (targetPosition - transform.position).normalized;
-        
+
         float distanceBeforMoving = Vector3.Distance(transform.position, targetPosition);
 
 
@@ -25,9 +25,9 @@ public class BulletProjectile : MonoBehaviour
 
         float distanceAfterMoving = Vector3.Distance(transform.position, targetPosition);
 
-    
+
         if (distanceBeforMoving < distanceAfterMoving)
-        {   
+        {
             transform.position = targetPosition;
 
             trailRenderer.transform.parent = null;
@@ -35,8 +35,8 @@ public class BulletProjectile : MonoBehaviour
 
             Instantiate(bulletHitVfxPrefab, targetPosition, Quaternion.identity);
         }
-    
-     }
 
-     
+    }
+
+
 }

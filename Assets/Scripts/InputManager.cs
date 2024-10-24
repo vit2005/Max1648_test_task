@@ -10,7 +10,6 @@ public class InputManager : MonoBehaviour
 
     private PlayerInputActions playerInputActions;
 
-
     private void Awake()
     {
         if (Instance != null)
@@ -24,7 +23,7 @@ public class InputManager : MonoBehaviour
         playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
     }
-     
+
     public Vector2 GetMouseScreenPosition()
     {
 #if USE_NEW_INPUT_SYSTEM

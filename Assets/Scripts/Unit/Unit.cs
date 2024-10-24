@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    
-    private const int ACTION_POINTS_MAX = 9;
-
+    private const int ACTION_POINTS_MAX = 2;
 
     public static event EventHandler OnAnyActionPointsChanged;
     public static event EventHandler OnAnyUnitSpawned;
@@ -30,22 +28,22 @@ public class Unit : MonoBehaviour
     {
         gridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
         LevelGrid.Instance.AddUnitAtGridPosition(gridPosition, this);
-   
+
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         healthSystem.OnDead += HealthSystem_OnDead;
 
         OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
-    private void Update() 
-    {   
-         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
-         if (newGridPosition != gridPosition)
-         {
+    private void Update()
+    {
+        GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if (newGridPosition != gridPosition)
+        {
             GridPosition oldGridPosition = gridPosition;
             gridPosition = newGridPosition;
             LevelGrid.Instance.UnitMovedGridPosition(this, oldGridPosition, newGridPosition);
-            
-         }
+
+        }
     }
 
     public T GetAction<T>() where T : BaseAction
@@ -81,7 +79,8 @@ public class Unit : MonoBehaviour
         {
             SpendActionPoints(baseAction.GetActionPointsCost());
             return true;
-        } else 
+        }
+        else
         {
             return false;
         }
@@ -89,14 +88,15 @@ public class Unit : MonoBehaviour
 
     public bool CanSpendActionPointsToTakeAction(BaseAction baseAction)
     {
-       // return actionPoints >= baseAction.GetActionPointsCost();
+        // return actionPoints >= baseAction.GetActionPointsCost();
         if (actionPoints >= baseAction.GetActionPointsCost())
         {
             return true;
-        } else 
+        }
+        else
         {
             return false;
-        } 
+        }
     }
 
     private void SpendActionPoints(int amount)
@@ -113,12 +113,12 @@ public class Unit : MonoBehaviour
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
     {
-        if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) || 
+        if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) ||
             (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
         {
-        actionPoints = ACTION_POINTS_MAX;
+            actionPoints = ACTION_POINTS_MAX;
 
-         OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+            OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -129,7 +129,7 @@ public class Unit : MonoBehaviour
 
     public void Damage(int damageAmount)
     {
-       healthSystem.Damage(damageAmount);
+        healthSystem.Damage(damageAmount);
     }
 
     private void HealthSystem_OnDead(object sender, EventArgs e)

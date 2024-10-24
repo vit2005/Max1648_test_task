@@ -42,22 +42,22 @@ public class InteractAction : BaseAction
             for (int z = -maxInteractDistance; z <= maxInteractDistance; z++)
             {
                 GridPosition offsetGridPosition = new GridPosition(x, z);
-                GridPosition testGridPosition = unitGridPosition + offsetGridPosition; 
-                
+                GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
+
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                 {
                     continue;
                 }
-                
+
                 IInteractable interactable = LevelGrid.Instance.GetInteractableAtGridPosition(testGridPosition);
-                
+
                 if (interactable == null)
                 {
                     continue;
                 }
 
                 validGridPositionList.Add(testGridPosition);
-               // Debug.Log(testGridPosition);
+                // Debug.Log(testGridPosition);
             }
         }
 
@@ -67,7 +67,7 @@ public class InteractAction : BaseAction
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
         IInteractable interactable = LevelGrid.Instance.GetInteractableAtGridPosition(gridPosition);
-        interactable.Interact(OnInteractComplete); 
+        interactable.Interact(OnInteractComplete);
         ActionStart(onActionComplete);
     }
 

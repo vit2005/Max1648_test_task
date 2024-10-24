@@ -21,7 +21,7 @@ public class ShootAction : BaseAction
         Shooting,
         Cooloff,
     }
-   
+
     [SerializeField] private LayerMask obstaclesLayerMask;
     private State state;
     private int maxShootDistance = 7;
@@ -41,44 +41,44 @@ public class ShootAction : BaseAction
 
         switch (state)
         {
-            case State.Aiming:   
+            case State.Aiming:
                 Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-                
+
                 float rotateSpeed = 10f;
                 transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * rotateSpeed);
                 break;
             case State.Shooting:
-              if (canShootBullet)
-              {
+                if (canShootBullet)
+                {
                     Shoot();
                     canShootBullet = false;
-              }              
+                }
                 break;
             case State.Cooloff:
-                break; 
+                break;
         }
 
-          if (stateTimer <= 0f)
-          {
-                NextState();      
-          }
+        if (stateTimer <= 0f)
+        {
+            NextState();
+        }
     }
 
     private void NextState()
     {
         switch (state)
         {
-            case State.Aiming:            
+            case State.Aiming:
                 state = State.Shooting;
                 float shootingStateTime = 0.1f;
                 stateTimer = shootingStateTime;
                 break;
-            case State.Shooting:            
+            case State.Shooting:
                 state = State.Cooloff;
                 float coolOffStateTime = 0.5f;
-                 stateTimer = coolOffStateTime;
+                stateTimer = coolOffStateTime;
                 break;
-            case State.Cooloff:            
+            case State.Cooloff:
                 ActionComplete();
                 break;
         }
@@ -88,18 +88,19 @@ public class ShootAction : BaseAction
 
     private void Shoot()
     {
-        OnAnyShoot?.Invoke(this, new OnShootEventArgs {
+        OnAnyShoot?.Invoke(this, new OnShootEventArgs
+        {
             targetUnit = targetUnit,
             shootingUnit = unit
         });
 
-        OnShoot?.Invoke(this, new OnShootEventArgs {
+        OnShoot?.Invoke(this, new OnShootEventArgs
+        {
             targetUnit = targetUnit,
             shootingUnit = unit
         });
 
-       
-        targetUnit.Damage(40);
+        targetUnit.Damage(25);
     }
 
     public override string GetActionName()
@@ -117,26 +118,26 @@ public class ShootAction : BaseAction
     {
         List<GridPosition> validGridPositionList = new List<GridPosition>();
 
-       // GridPosition unitGridPosition = unit.GetGridPosition();
+        // GridPosition unitGridPosition = unit.GetGridPosition();
 
         for (int x = -maxShootDistance; x <= maxShootDistance; x++)
         {
             for (int z = -maxShootDistance; z <= maxShootDistance; z++)
             {
                 GridPosition offsetGridPosition = new GridPosition(x, z);
-                GridPosition testGridPosition = unitGridPosition + offsetGridPosition; 
-                
+                GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
+
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                 {
                     continue;
                 }
-                
+
                 int testDistance = Mathf.Abs(x) + Mathf.Abs(z);
                 if (testDistance > maxShootDistance)
                 {
                     continue;
                 }
-                
+
 
                 if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                 {
@@ -149,23 +150,23 @@ public class ShootAction : BaseAction
                 {
                     continue;
                 }
-                
+
                 Vector3 unitWorldPosition = LevelGrid.Instance.GetWorldPosition(unitGridPosition);
                 Vector3 shootDir = (targetUnit.GetWorldPosition() - unitWorldPosition).normalized;
-                
-                
+
+
                 float unitShoulderHeight = 1.7f;
                 if (Physics.Raycast(
                     unitWorldPosition + Vector3.up * unitShoulderHeight,
                     shootDir,
                     Vector3.Distance(unitWorldPosition, targetUnit.GetWorldPosition()),
-                    obstaclesLayerMask)) 
+                    obstaclesLayerMask))
                 {
                     continue;
                 }
 
                 validGridPositionList.Add(testGridPosition);
-               // Debug.Log(testGridPosition);
+                // Debug.Log(testGridPosition);
             }
         }
 
@@ -173,22 +174,22 @@ public class ShootAction : BaseAction
     }
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
-    {        
+    {
         targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
 
-        
+
         state = State.Aiming;
         float aimingStateTime = 1f;
         stateTimer = aimingStateTime;
 
         canShootBullet = true;
 
-        ActionStart(onActionComplete);           
+        ActionStart(onActionComplete);
     }
 
     public Unit GetTargetUnit()
     {
-       return targetUnit;  
+        return targetUnit;
     }
 
     public int GetMaxShootDistance()
@@ -197,11 +198,11 @@ public class ShootAction : BaseAction
     }
 
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
-    {   
+    {
         Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
-         
 
-        return new EnemyAIAction 
+
+        return new EnemyAIAction
         {
             gridPosition = gridPosition,
             actionValue = 100 + Mathf.RoundToInt((1 - targetUnit.GetHealthNormalized()) * 100f),
@@ -210,6 +211,6 @@ public class ShootAction : BaseAction
 
     public int GetTargetCountAtPosition(GridPosition gridPosition)
     {
-       return  GetValidActionGridPositionList(gridPosition).Count;
-    }    
+        return GetValidActionGridPositionList(gridPosition).Count;
+    }
 }

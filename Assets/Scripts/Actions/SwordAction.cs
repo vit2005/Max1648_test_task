@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class SwordAction : BaseAction
 {
-
     public static event EventHandler OnAnySwordHit;
     public event EventHandler OnSwordActionStarted;
     public event EventHandler OnSwordActionCompleted;
@@ -32,37 +31,37 @@ public class SwordAction : BaseAction
 
         switch (state)
         {
-            case State.SwingingSwordBeforeHit:   
+            case State.SwingingSwordBeforeHit:
                 Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
-                
+
                 float rotateSpeed = 10f;
                 transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * rotateSpeed);
                 break;
             case State.SwingingSwordAfterHit:
                 break;
         }
-          if (stateTimer <= 0f)
-          {
-                NextState();      
-          }
+        if (stateTimer <= 0f)
+        {
+            NextState();
+        }
     }
 
     private void NextState()
     {
         switch (state)
         {
-            case State.SwingingSwordBeforeHit:            
+            case State.SwingingSwordBeforeHit:
                 state = State.SwingingSwordAfterHit;
                 float afterHitStateTime = 0.5f;
                 stateTimer = afterHitStateTime;
-                targetUnit.Damage(100);
+                targetUnit.Damage(40);
                 OnAnySwordHit?.Invoke(this, EventArgs.Empty);
                 break;
-            case State.SwingingSwordAfterHit:   
-                OnSwordActionCompleted?.Invoke(this, EventArgs.Empty);         
+            case State.SwingingSwordAfterHit:
+                OnSwordActionCompleted?.Invoke(this, EventArgs.Empty);
                 ActionComplete();
                 break;
-            
+
         }
 
 
@@ -92,13 +91,13 @@ public class SwordAction : BaseAction
             for (int z = -maxSwordDistance; z <= maxSwordDistance; z++)
             {
                 GridPosition offsetGridPosition = new GridPosition(x, z);
-                GridPosition testGridPosition = unitGridPosition + offsetGridPosition; 
-                
+                GridPosition testGridPosition = unitGridPosition + offsetGridPosition;
+
                 if (!LevelGrid.Instance.IsValidGridPosition(testGridPosition))
                 {
                     continue;
                 }
-                
+
                 if (!LevelGrid.Instance.HasAnyUnitOnGridPosition(testGridPosition))
                 {
                     continue;
@@ -110,10 +109,10 @@ public class SwordAction : BaseAction
                 {
                     continue;
                 }
-                
+
 
                 validGridPositionList.Add(testGridPosition);
-               // Debug.Log(testGridPosition);
+                // Debug.Log(testGridPosition);
             }
         }
 

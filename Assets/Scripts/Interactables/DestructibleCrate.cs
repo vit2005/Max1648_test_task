@@ -19,11 +19,11 @@ public class DestructibleCrate : MonoBehaviour
     {
         return gridPosition;
     }
-    
+
     public void Damage()
-    {   
+    {
         Transform crateDestroyedTransform = Instantiate(crateDestroyedPrefab, transform.position, transform.rotation);
-        
+
         ApplyExplosionToChildren(crateDestroyedTransform, 150f, crateDestroyedTransform.position, 10f);
         Destroy(gameObject);
 

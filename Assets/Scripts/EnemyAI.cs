@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
-{     
-
+{
     private enum State
     {
         WaitingForEnemyTurn,
@@ -36,25 +35,26 @@ public class EnemyAI : MonoBehaviour
             case State.WaitingForEnemyTurn:
                 break;
             case State.TakingTurn:
-              timer -= Time.deltaTime;
-              if (timer <= 0f)
-              {                   
-                    
+                timer -= Time.deltaTime;
+                if (timer <= 0f)
+                {
+
                     if (TryTakeEnemyAIAction(SetStateTakingTurn))
                     {
-                         state = State.Busy;
-                    } else                    
+                        state = State.Busy;
+                    }
+                    else
                     {
                         TurnSystem.Instance.NextTurn();
                     }
                     //TurnSystem.Instance.NextTurn();
-              }
+                }
                 break;
             case State.Busy:
                 break;
 
-        }        
-       
+        }
+
     }
 
     private void SetStateTakingTurn()
@@ -70,7 +70,7 @@ public class EnemyAI : MonoBehaviour
             state = State.TakingTurn;
             timer = 2f;
         }
-        
+
     }
 
     private bool TryTakeEnemyAIAction(Action onEnemyAIActionComplete)
@@ -91,7 +91,7 @@ public class EnemyAI : MonoBehaviour
     {
         EnemyAIAction bestEnemyAIAction = null;
         BaseAction bestBaseAction = null;
-        
+
         foreach (BaseAction baseAction in enemyUnit.GetBaseActionArray())
         {
             if (!enemyUnit.CanSpendActionPointsToTakeAction(baseAction))
@@ -103,7 +103,8 @@ public class EnemyAI : MonoBehaviour
             {
                 bestEnemyAIAction = baseAction.GetBestEnemyAIAction();
                 bestBaseAction = baseAction;
-            } else
+            }
+            else
             {
                 EnemyAIAction testEnemyAIAction = baseAction.GetBestEnemyAIAction();
                 if (testEnemyAIAction != null && testEnemyAIAction.actionValue > bestEnemyAIAction.actionValue)
@@ -113,7 +114,7 @@ public class EnemyAI : MonoBehaviour
                 }
             }
 
-           // baseAction.GetBestEnemyAIAction();
+            // baseAction.GetBestEnemyAIAction();
         }
 
         if (bestEnemyAIAction != null && enemyUnit.TrySpendActionPointsToTakeAction(bestBaseAction))
@@ -121,28 +122,28 @@ public class EnemyAI : MonoBehaviour
             bestBaseAction.TakeAction(bestEnemyAIAction.gridPosition, onEnemyAIActionComplete);
             return true;
         }
-        else 
+        else
         {
             return false;
         }
 
-       /* SpinAction spinAction = enemyUnit.GetSpinAction();
+        /* SpinAction spinAction = enemyUnit.GetSpinAction();
 
-        GridPosition actionGridPosition = enemyUnit.GetGridPosition();
-            
-            if (!spinAction.IsValidActionGridPosition(actionGridPosition))
-            {
-                return false;
-            }
-            
-            if (!enemyUnit.TrySpendActionPointsToTakeAction(spinAction))
-            {
-                return false;
-            }
+         GridPosition actionGridPosition = enemyUnit.GetGridPosition();
 
-            Debug.Log("Spin Action!");
-            spinAction.TakeAction(actionGridPosition, onEnemyAIActionComplete);
-            return true;*/
-            
+             if (!spinAction.IsValidActionGridPosition(actionGridPosition))
+             {
+                 return false;
+             }
+
+             if (!enemyUnit.TrySpendActionPointsToTakeAction(spinAction))
+             {
+                 return false;
+             }
+
+             Debug.Log("Spin Action!");
+             spinAction.TakeAction(actionGridPosition, onEnemyAIActionComplete);
+             return true;*/
+
     }
 }

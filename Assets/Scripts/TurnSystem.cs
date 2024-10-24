@@ -6,7 +6,7 @@ using UnityEngine;
 public class TurnSystem : MonoBehaviour
 {
     public static TurnSystem Instance { get; private set; } // singleton pattern
-    
+
     public event EventHandler OnTurnChanged;
 
     private int turnNumber = 1;
@@ -33,10 +33,10 @@ public class TurnSystem : MonoBehaviour
 
     public int GetTurnNumber()
     {
-       return turnNumber; 
+        return turnNumber;
     }
 
-     public bool IsPlayerTurn()
+    public bool IsPlayerTurn()
     {
         return isPlayerTurn;
     }

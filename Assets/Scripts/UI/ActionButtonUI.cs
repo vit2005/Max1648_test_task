@@ -17,7 +17,8 @@ public class ActionButtonUI : MonoBehaviour
         this.baseAction = baseAction;
         textMeshPro.text = baseAction.GetActionName().ToUpper();
 
-        button.onClick.AddListener(() => {
+        button.onClick.AddListener(() =>
+        {
             UnitActionSystem.Instance.SetSelectedAction(baseAction);
         });
     }
@@ -28,5 +29,5 @@ public class ActionButtonUI : MonoBehaviour
         selectedGameObject.SetActive(selectedBaseAction == baseAction);
     }
 
-   
+
 }

@@ -8,7 +8,7 @@ public abstract class BaseAction : MonoBehaviour
 
     public static event EventHandler OnAnyActionStarted;
     public static event EventHandler OnAnyActionCompleted;
-    
+
     protected Unit unit;
     protected bool isActive;
     protected Action onActionComplete;
@@ -25,7 +25,7 @@ public abstract class BaseAction : MonoBehaviour
     public virtual bool IsValidActionGridPosition(GridPosition gridPosition)
     {
         List<GridPosition> validGridPositionList = GetValidActionGridPositionList();
-        return validGridPositionList.Contains(gridPosition);    
+        return validGridPositionList.Contains(gridPosition);
     }
 
     public abstract List<GridPosition> GetValidActionGridPositionList();
@@ -55,7 +55,7 @@ public abstract class BaseAction : MonoBehaviour
     {
         return unit;
     }
- 
+
     public EnemyAIAction GetBestEnemyAIAction()
     {
         List<EnemyAIAction> enemyAIActionList = new List<EnemyAIAction>();
@@ -67,12 +67,13 @@ public abstract class BaseAction : MonoBehaviour
             EnemyAIAction enemyAIAction = GetEnemyAIAction(gridPosition);
             enemyAIActionList.Add(enemyAIAction);
         }
-        
+
         if (enemyAIActionList.Count > 0)
         {
-        enemyAIActionList.Sort((EnemyAIAction a, EnemyAIAction b) => b.actionValue - a.actionValue);
-        return enemyAIActionList[0];
-        } else 
+            enemyAIActionList.Sort((EnemyAIAction a, EnemyAIAction b) => b.actionValue - a.actionValue);
+            return enemyAIActionList[0];
+        }
+        else
         {
             return null;
         }

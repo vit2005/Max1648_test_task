@@ -8,10 +8,9 @@ public class UnitRagdoolSpawner : MonoBehaviour
     [SerializeField] private Transform ragdollPrefab;
     [SerializeField] private Transform originalRootBone;
 
-
     private HealthSystem healthSystem;
 
-    private void Awake() 
+    private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
 

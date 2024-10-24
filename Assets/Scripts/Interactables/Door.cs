@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Door : MonoBehaviour, IInteractable
 {
-   // public static event EventHandler OnAnyDoorOpened; //
-   // public event EventHandler OnDoorOpened; //
+    // public static event EventHandler OnAnyDoorOpened; //
+    // public event EventHandler OnDoorOpened; //
 
     [SerializeField] private bool isOpen;
     private GridPosition gridPosition;
@@ -28,7 +28,8 @@ public class Door : MonoBehaviour, IInteractable
         if (isOpen)
         {
             OpenDoor();
-        } else
+        }
+        else
         {
             CloseDoor();
         }
@@ -58,7 +59,8 @@ public class Door : MonoBehaviour, IInteractable
         if (isOpen)
         {
             CloseDoor();
-        } else
+        }
+        else
         {
             OpenDoor();
         }
@@ -69,8 +71,8 @@ public class Door : MonoBehaviour, IInteractable
         isOpen = true;
         animator.SetBool("IsOpen", isOpen);
         Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, true);
-      //  OnDoorOpened?.Invoke(this, EventArgs.Empty); ///
-       // OnAnyDoorOpened?.Invoke(this, EventArgs.Empty); ///
+        //  OnDoorOpened?.Invoke(this, EventArgs.Empty); ///
+        // OnAnyDoorOpened?.Invoke(this, EventArgs.Empty); ///
 
     }
 
@@ -79,6 +81,6 @@ public class Door : MonoBehaviour, IInteractable
         isOpen = false;
         animator.SetBool("IsOpen", isOpen);
         Pathfinding.Instance.SetIsWalkableGridPosition(gridPosition, false);
-    
+
     }
 }

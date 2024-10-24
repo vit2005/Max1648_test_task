@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class GrenadeProjectile : MonoBehaviour
 {
-   
-   public static event EventHandler OnAnyGrenadeExploded;
+
+    public static event EventHandler OnAnyGrenadeExploded;
+
+    [SerializeField] private Transform grenadeExplodeVfxPrefab;
+    [SerializeField] private TrailRenderer trailRenderer;
+    [SerializeField] private AnimationCurve arcYAnimationCurve;
 
 
-   [SerializeField] private Transform grenadeExplodeVfxPrefab;
-   [SerializeField] private TrailRenderer trailRenderer;
-   [SerializeField] private AnimationCurve arcYAnimationCurve;
-   
-    
     private Vector3 targetPosition;
     private Action onGrenadeBehaviourComplete;
     private float totalDistance;
@@ -22,8 +21,8 @@ public class GrenadeProjectile : MonoBehaviour
     private void Update()
     {
         Vector3 moveDir = (targetPosition - positionXZ).normalized;
-        
-        
+
+
         float moveSpeed = 15f;
         positionXZ += moveDir * moveSpeed * Time.deltaTime;
 
@@ -39,12 +38,12 @@ public class GrenadeProjectile : MonoBehaviour
         {
             float damageRadius = 4f;
             Collider[] colliderArray = Physics.OverlapSphere(targetPosition, damageRadius);
-            
+
             foreach (Collider collider in colliderArray)
             {
                 if (collider.TryGetComponent<Unit>(out Unit targetUnit))
                 {
-                    targetUnit.Damage(30);
+                    targetUnit.Damage(20);
                 }
 
                 if (collider.TryGetComponent<DestructibleCrate>(out DestructibleCrate destructibleCrate))
@@ -53,9 +52,9 @@ public class GrenadeProjectile : MonoBehaviour
                 }
             }
             OnAnyGrenadeExploded?.Invoke(this, EventArgs.Empty);
-            
+
             trailRenderer.transform.parent = null;
-            
+
             Instantiate(grenadeExplodeVfxPrefab, targetPosition + Vector3.up * 1f, Quaternion.identity);
             Destroy(gameObject);
 

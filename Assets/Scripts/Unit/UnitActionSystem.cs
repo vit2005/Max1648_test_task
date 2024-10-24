@@ -6,20 +6,16 @@ using UnityEngine.EventSystems;
 
 public class UnitActionSystem : MonoBehaviour
 {
-
     public static UnitActionSystem Instance { get; private set; } // singleton pattern
-    
-    
+
     public event EventHandler OnSelectedUnitChanged;
     public event EventHandler OnSelectedActionChanged;
     public event EventHandler<bool> OnBusyChanged;
     public event EventHandler OnActionStarted;
 
+    [SerializeField] private Unit selectedUnit;
+    [SerializeField] private LayerMask unitLayerMask;
 
-     [SerializeField] private Unit selectedUnit;
-     [SerializeField] private LayerMask unitLayerMask;
-
-     
     private BaseAction selectedAction;
     private bool isBusy;
 
@@ -33,19 +29,19 @@ public class UnitActionSystem : MonoBehaviour
         }
         Instance = this;
     }
-    
-    
+
+
     private void Start()
     {
         SetSelectedUnit(selectedUnit);
     }
 
-     private void Update()
-     {
+    private void Update()
+    {
         if (isBusy)
         {
             return;
-        }      
+        }
 
         if (!TurnSystem.Instance.IsPlayerTurn())
         {
@@ -54,25 +50,25 @@ public class UnitActionSystem : MonoBehaviour
 
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            return;  
+            return;
         }
 
         if (TryHandleUnitSelection())
         {
             return;
-        } 
+        }
 
-         HandleSelectedAction();
+        HandleSelectedAction();
 
-        
-     } 
 
-     private void HandleSelectedAction()
-     {
+    }
+
+    private void HandleSelectedAction()
+    {
         if (InputManager.Instance.IsMouseButtonDownThisFrame())
         {
             GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetPosition());
-            
+
             if (selectedAction.IsValidActionGridPosition(mouseGridPosition))
             {
                 if (selectedUnit.TrySpendActionPointsToTakeAction(selectedAction))
@@ -82,76 +78,76 @@ public class UnitActionSystem : MonoBehaviour
 
                     OnActionStarted?.Invoke(this, EventArgs.Empty);
                 }
-                 }
-             
-        }
-     }
+            }
 
-     private void SetBusy()
-     {
+        }
+    }
+
+    private void SetBusy()
+    {
         isBusy = true;
 
         OnBusyChanged?.Invoke(this, isBusy);
-     }
+    }
 
-     private void ClearBusy()
-     {
+    private void ClearBusy()
+    {
         isBusy = false;
 
         OnBusyChanged?.Invoke(this, isBusy);
-     }
+    }
 
-     private bool TryHandleUnitSelection()
-     {
+    private bool TryHandleUnitSelection()
+    {
 
-        if (InputManager.Instance.IsMouseButtonDownThisFrame()) 
+        if (InputManager.Instance.IsMouseButtonDownThisFrame())
         {
-        
-        Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
-        {
-            if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
+
+            Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
             {
-                if (unit == selectedUnit)
+                if (raycastHit.transform.TryGetComponent<Unit>(out Unit unit))
                 {
-                    return false;
-                }
+                    if (unit == selectedUnit)
+                    {
+                        return false;
+                    }
 
-                if (unit.IsEnemy())
-                {
-                    return false;
+                    if (unit.IsEnemy())
+                    {
+                        return false;
+                    }
+                    SetSelectedUnit(unit);
+                    return true;
                 }
-                SetSelectedUnit(unit);
-                return true;
             }
-        }
         }
 
         return false;
-       
-     }
 
-     private void SetSelectedUnit(Unit unit)
-     {
+    }
+
+    private void SetSelectedUnit(Unit unit)
+    {
         selectedUnit = unit;
         SetSelectedAction(unit.GetAction<MoveAction>());
 
-        OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);         
-     }
+        OnSelectedUnitChanged?.Invoke(this, EventArgs.Empty);
+    }
 
-     public void SetSelectedAction(BaseAction baseAction)
-     {
+    public void SetSelectedAction(BaseAction baseAction)
+    {
         selectedAction = baseAction;
         OnSelectedActionChanged?.Invoke(this, EventArgs.Empty);
-     }
+    }
 
-     public Unit GetSelectedUnit()
-     {
+    public Unit GetSelectedUnit()
+    {
         return selectedUnit;
-     }
+    }
 
-     public BaseAction GetSelectedAction()
-     {
+    public BaseAction GetSelectedAction()
+    {
         return selectedAction;
-     }
+    }
 }
