@@ -6,7 +6,7 @@ using Cinemachine;
 public class CameraController : MonoBehaviour
 {
     private const float MIN_FOLLOW_Y_OFFSET = 2f;
-    private const float MAX_FOLLOW_Y_OFFSET = 12f;
+    private const float MAX_FOLLOW_Y_OFFSET = 20f;
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
    
     private CinemachineTransposer cinemachineTranposer;
@@ -49,7 +49,7 @@ public class CameraController : MonoBehaviour
 
     private void HandleZoom()
     {
-        Debug.Log(InputManager.Instance.GetCameraZoomAmount());
+        //Debug.Log(InputManager.Instance.GetCameraZoomAmount());
         float zoomIncreaseAmount = 1f;
         targetFollowOffset.y += InputManager.Instance.GetCameraZoomAmount() * zoomIncreaseAmount;
             
