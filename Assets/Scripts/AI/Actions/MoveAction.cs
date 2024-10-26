@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class MoveAction : BaseAction
 {
-
     [SerializeField] private int maxMoveDistance = 4;
+    public int MaxMoveDistance => maxMoveDistance;
 
     public event EventHandler OnStartMoving;
     public event EventHandler OnStopMoving;
@@ -20,7 +20,6 @@ public class MoveAction : BaseAction
         {
             return;
         }
-
 
         Vector3 targetPosition = positionList[currentPositionIndex];
         Vector3 moveDirection = (targetPosition - transform.position).normalized;
@@ -61,7 +60,6 @@ public class MoveAction : BaseAction
 
         OnStartMoving?.Invoke(this, EventArgs.Empty);
         ActionStart(onActionComplete);
-
     }
 
     public override List<GridPosition> GetValidActionGridPositionList()

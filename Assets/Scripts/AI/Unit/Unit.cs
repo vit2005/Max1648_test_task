@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -13,6 +14,7 @@ public class Unit : MonoBehaviour
 
 
     [SerializeField] private bool isEnemy;
+    public bool IsEnemy => isEnemy;
 
     private GridPosition gridPosition;
     private HealthSystem healthSystem;
@@ -113,8 +115,8 @@ public class Unit : MonoBehaviour
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
     {
-        if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) ||
-            (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn()))
+        if ((IsEnemy && !TurnSystem.Instance.IsPlayerTurn()) ||
+            (!IsEnemy && TurnSystem.Instance.IsPlayerTurn()))
         {
             actionPoints = ACTION_POINTS_MAX;
 
@@ -122,9 +124,22 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public bool IsEnemy()
+    public List<Unit> GetEnemiesList()
     {
-        return isEnemy;
+        return IsEnemy ? 
+            UnitManager.Instance.GetFriendlyUnitList() : 
+            UnitManager.Instance.GetEnemyUnitList();
+    }
+
+    public Unit GetClosestEnemy()
+    {
+        List<Unit> enemiesList = GetEnemiesList();
+
+        var currPos = GetGridPosition();
+        var closest = enemiesList.OrderBy(unit => currPos.DistanceTo(unit.GetGridPosition())) // Сортуємо за відстанню
+            .FirstOrDefault(); // Повертаємо найближчого юніта або null, якщо список порожній
+
+        return closest;
     }
 
     public void Damage(int damageAmount)

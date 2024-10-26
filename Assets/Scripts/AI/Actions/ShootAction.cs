@@ -23,6 +23,7 @@ public class ShootAction : BaseAction
     }
 
     [SerializeField] private LayerMask obstaclesLayerMask;
+    public LayerMask ObstaclesLayerMask => obstaclesLayerMask;
     private State state;
     private int maxShootDistance = 7;
     private float stateTimer;
@@ -146,7 +147,7 @@ public class ShootAction : BaseAction
 
                 Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
-                if (targetUnit.IsEnemy() == unit.IsEnemy())
+                if (targetUnit.IsEnemy == unit.IsEnemy)
                 {
                     continue;
                 }

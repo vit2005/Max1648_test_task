@@ -63,8 +63,6 @@ public class SwordAction : BaseAction
                 break;
 
         }
-
-
     }
     public override string GetActionName()
     {
@@ -105,7 +103,7 @@ public class SwordAction : BaseAction
 
                 Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(testGridPosition);
 
-                if (targetUnit.IsEnemy() == unit.IsEnemy())
+                if (targetUnit.IsEnemy == unit.IsEnemy)
                 {
                     continue;
                 }

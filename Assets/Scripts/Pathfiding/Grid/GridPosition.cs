@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using UnityEngine;
 
 public struct GridPosition : IEquatable<GridPosition>
 {
@@ -24,6 +25,13 @@ public struct GridPosition : IEquatable<GridPosition>
     public bool Equals(GridPosition other)
     {
         return this == other;
+    }
+
+    public float DistanceTo(GridPosition other)
+    {
+        int dx = other.x - x;
+        int dz = other.z - z;
+        return Mathf.Sqrt(dx * dx + dz * dz);
     }
 
     public override int GetHashCode()
