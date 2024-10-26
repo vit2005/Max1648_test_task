@@ -5,7 +5,6 @@ using UnityEngine;
 
 public abstract class BaseAction : MonoBehaviour
 {
-
     public static event EventHandler OnAnyActionStarted;
     public static event EventHandler OnAnyActionCompleted;
 

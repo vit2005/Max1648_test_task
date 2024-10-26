@@ -19,6 +19,7 @@ public class Unit : MonoBehaviour
     private GridPosition gridPosition;
     private HealthSystem healthSystem;
     private BaseAction[] baseActionArray;
+    private BaseHeuristic[] baseHeuristicArray;
     private int actionPoints = ACTION_POINTS_MAX;
 
     private void Awake()
@@ -55,6 +56,18 @@ public class Unit : MonoBehaviour
             if (baseAction is T)
             {
                 return (T)baseAction;
+            }
+        }
+        return null;
+    }
+
+    public T GetHeuristic<T>() where T : BaseHeuristic
+    {
+        foreach (BaseHeuristic baseHeuristic in baseHeuristicArray)
+        {
+            if (baseHeuristic is T)
+            {
+                return (T)baseHeuristic;
             }
         }
         return null;
