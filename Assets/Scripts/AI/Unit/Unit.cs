@@ -19,13 +19,29 @@ public class Unit : MonoBehaviour
     private GridPosition gridPosition;
     private HealthSystem healthSystem;
     private BaseAction[] baseActionArray;
-    private BaseHeuristic[] baseHeuristicArray;
+    private List<BaseHeuristic> baseHeuristicArray;
+    private List<BaseBehavior> baseBehaviorsArray;
     private int actionPoints = ACTION_POINTS_MAX;
 
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
         baseActionArray = GetComponents<BaseAction>();
+        baseHeuristicArray = new List<BaseHeuristic>
+        {
+            new ClosenessHeuristic(this),
+            new ClusterHeuristic(this),
+            new CoverHeuristic(this),
+            new HealthHeuristic(this),
+            new SuperiorityHeuristic(this)
+        };
+        baseBehaviorsArray = new List<BaseBehavior>()
+        {
+            new HideBehavior(this),
+            new HuntBehavior(this),
+            new RushBehavior(this),
+            new ShootClosestEnemyBehavior(this),
+        };
     }
     private void Start()
     {
@@ -86,6 +102,16 @@ public class Unit : MonoBehaviour
     public BaseAction[] GetBaseActionArray()
     {
         return baseActionArray;
+    }
+
+    public void DebugBestBehavior()
+    {
+        Debug.Log(gameObject.name);
+        foreach(var behavior in baseBehaviorsArray)
+        {
+            Debug.Log(behavior.GetType() + ":  " + behavior.GetValue(out _));
+        }
+        Debug.Log("------------------------");
     }
 
     public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)

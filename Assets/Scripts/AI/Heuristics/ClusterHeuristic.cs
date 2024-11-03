@@ -16,7 +16,7 @@ public class ClusterHeuristic : BaseHeuristic
         // ќтримуЇмо список вс≥х ворог≥в
         List<Unit> enemies = unit.GetEnemiesList();
         var curPos = unit.GetGridPosition();
-        int moveDistance = unit.GetAction<MoveAction>().MaxMoveDistance;
+        int moveDistance = unit.GetAction<MoveOffenciveAction>().MaxMoveDistance;
         var visibleWalkableEnemies = enemies.Where(x => 
         x.GetGridPosition().DistanceTo(unit.GetGridPosition()) <= moveDistance &&
         Pathfinding.Instance.HasPath(curPos, x.GetGridPosition())).ToList();

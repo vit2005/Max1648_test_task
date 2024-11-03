@@ -6,12 +6,20 @@ using Cinemachine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
+    [SerializeField] private EnemyAI enemyAI;
 
     private const float MIN_FOLLOW_Y_OFFSET = 2f;
     private const float MAX_FOLLOW_Y_OFFSET = 20f;
 
     private CinemachineTransposer cinemachineTranposer;
     private Vector3 targetFollowOffset;
+    private Transform targetFollow;
+
+    private void Awake()
+    {
+        enemyAI.OnActionStarted += (Unit u) => { targetFollow = u.transform; };
+        enemyAI.OnActionFinished += () => { targetFollow = null; };
+    }
 
     private void Start()
     {
@@ -20,6 +28,12 @@ public class CameraController : MonoBehaviour
     }
     private void Update()
     {
+        if (targetFollow != null)
+        {
+            transform.position = targetFollow.position;
+            return;
+        }
+
         HandleMovement();
         HandleRotation();
         HandleZoom();

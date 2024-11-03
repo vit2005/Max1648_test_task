@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class MoveAction : BaseAction
+public class MoveOffenciveAction : BaseAction
 {
     [SerializeField] private int maxMoveDistance = 4;
     public int MaxMoveDistance => maxMoveDistance;
@@ -64,6 +65,7 @@ public class MoveAction : BaseAction
 
     public override List<GridPosition> GetValidActionGridPositionList()
     {
+
         List<GridPosition> validGridPositionList = new List<GridPosition>();
 
         GridPosition unitGridPosition = unit.GetGridPosition();
@@ -115,6 +117,25 @@ public class MoveAction : BaseAction
 
     }
 
+    private List<GridPosition> ShortestPathToEnemy()
+    {
+        GridPosition unitGridPosition = unit.GetGridPosition();
+
+        List<List<GridPosition>> pathes = new List<List<GridPosition>>();
+        foreach (var enemy in unit.GetEnemiesList())
+        {
+            GridPosition enemyPosition = enemy.GetGridPosition();
+
+            List<GridPosition> pathGridPositionList = Pathfinding.Instance.FindPath(unitGridPosition, enemyPosition, out int pathLength);
+            if (pathGridPositionList != null) pathes.Add(pathGridPositionList);
+        }
+
+        List<GridPosition> shortest = pathes.OrderBy(x => x.Count).FirstOrDefault();
+        if (shortest == null) return new List<GridPosition>();
+
+        return shortest.Take(maxMoveDistance * 10).ToList();
+    }
+
     public override string GetActionName()
     {
         return "Move";
@@ -122,12 +143,32 @@ public class MoveAction : BaseAction
 
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
     {
+        int actionValue = 0;
+        var distance = gridPosition.DistanceTo(unit.GetGridPosition());
+        //if (distance < unit.GetAction<ShootAction>().MaxShootDistance)
+        //    actionValue = 
+
         int targetCountAtGridPosition = unit.GetAction<ShootAction>().GetTargetCountAtPosition(gridPosition);
+
+        if (targetCountAtGridPosition == 0)
+        {
+            var bestPath = ShortestPathToEnemy();
+            bestPath.Reverse();
+            int index = bestPath.IndexOf(gridPosition);
+            if (index != -1)
+                actionValue = (int)(10 * (bestPath.Count / index));
+            else
+                actionValue = 0;
+        }
+        else
+        {
+            actionValue = targetCountAtGridPosition * 10;
+        }
 
         return new EnemyAIAction
         {
             gridPosition = gridPosition,
-            actionValue = targetCountAtGridPosition * 10,
+            actionValue = actionValue,
         };
     }
 }

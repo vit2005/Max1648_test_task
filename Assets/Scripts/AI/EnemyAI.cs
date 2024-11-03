@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+    [SerializeField] bool isEnemy;
+    public event Action<Unit> OnActionStarted;
+    public event Action OnActionFinished;
     private enum State
     {
         WaitingForEnemyTurn,
@@ -38,7 +41,6 @@ public class EnemyAI : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer <= 0f)
                 {
-
                     if (TryTakeEnemyAIAction(SetStateTakingTurn))
                     {
                         state = State.Busy;
@@ -59,6 +61,7 @@ public class EnemyAI : MonoBehaviour
 
     private void SetStateTakingTurn()
     {
+        OnActionFinished?.Invoke();
         timer = 0.5f;
         state = State.TakingTurn;
     }
@@ -70,16 +73,20 @@ public class EnemyAI : MonoBehaviour
             state = State.TakingTurn;
             timer = 2f;
         }
-
     }
 
     private bool TryTakeEnemyAIAction(Action onEnemyAIActionComplete)
     {
         //Debug.Log("Take Enemy AI Action");
-        foreach (Unit enemyUnit in UnitManager.Instance.GetEnemyUnitList())
+        List<Unit> teamates = isEnemy ?
+            UnitManager.Instance.GetEnemyUnitList() :
+            UnitManager.Instance.GetFriendlyUnitList();
+
+        foreach (Unit enemyUnit in teamates)
         {
             if (TryTakeEnemyAIAction(enemyUnit, onEnemyAIActionComplete))
             {
+                OnActionStarted?.Invoke(enemyUnit);
                 return true;
             }
         }
@@ -91,6 +98,8 @@ public class EnemyAI : MonoBehaviour
     {
         EnemyAIAction bestEnemyAIAction = null;
         BaseAction bestBaseAction = null;
+
+        enemyUnit.DebugBestBehavior();
 
         foreach (BaseAction baseAction in enemyUnit.GetBaseActionArray())
         {

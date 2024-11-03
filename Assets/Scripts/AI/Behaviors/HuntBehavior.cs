@@ -8,7 +8,16 @@ public class HuntBehavior : BaseBehavior
 
     public override int GetValue(out BaseAction action)
     {
-        // Check Superiority to MoveAction (InteractAction) or StayAction
-        throw new System.NotImplementedException();
+        action = unit.GetAction<SpinAction>();
+        // Check Superiority to MoveAction (InteractAction)
+        var superiority = unit.GetHeuristic<SuperiorityHeuristic>().GetValue();
+        Debug.Log($"HuntBehavior: \ns:{superiority}");
+        if (superiority > 4)
+        {
+            action = unit.GetAction<MoveOffenciveAction>();
+            return 50;
+        }
+
+        return 0;
     }
 }

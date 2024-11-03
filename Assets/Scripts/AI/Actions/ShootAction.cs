@@ -26,6 +26,7 @@ public class ShootAction : BaseAction
     public LayerMask ObstaclesLayerMask => obstaclesLayerMask;
     private State state;
     private int maxShootDistance = 7;
+    public int MaxShootDistance => maxShootDistance;
     private float stateTimer;
     private Unit targetUnit;
     private bool canShootBullet;
