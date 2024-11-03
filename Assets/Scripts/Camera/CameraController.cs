@@ -7,6 +7,7 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
     [SerializeField] private EnemyAI enemyAI;
+    [SerializeField] private EnemyAI enemyAI2;
 
     private const float MIN_FOLLOW_Y_OFFSET = 2f;
     private const float MAX_FOLLOW_Y_OFFSET = 20f;
@@ -19,6 +20,8 @@ public class CameraController : MonoBehaviour
     {
         enemyAI.OnActionStarted += (Unit u) => { targetFollow = u.transform; };
         enemyAI.OnActionFinished += () => { targetFollow = null; };
+        enemyAI2.OnActionStarted += (Unit u) => { targetFollow = u.transform; };
+        enemyAI2.OnActionFinished += () => { targetFollow = null; };
     }
 
     private void Start()

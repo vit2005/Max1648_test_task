@@ -29,7 +29,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (TurnSystem.Instance.IsPlayerTurn())
+        if (TurnSystem.Instance.IsPlayerTurn() == isEnemy)
         {
             return;
         }
@@ -68,7 +68,11 @@ public class EnemyAI : MonoBehaviour
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e)
     {
-        if (!TurnSystem.Instance.IsPlayerTurn())
+        Debug.Log("isPlayer: " + TurnSystem.Instance.IsPlayerTurn() + ", isEnemy: " + isEnemy +
+            " = " + !(!TurnSystem.Instance.IsPlayerTurn() ^ isEnemy));
+
+
+        if (!(!TurnSystem.Instance.IsPlayerTurn() ^ isEnemy))
         {
             state = State.TakingTurn;
             timer = 2f;
@@ -82,11 +86,11 @@ public class EnemyAI : MonoBehaviour
             UnitManager.Instance.GetEnemyUnitList() :
             UnitManager.Instance.GetFriendlyUnitList();
 
-        foreach (Unit enemyUnit in teamates)
+        foreach (Unit unit in teamates)
         {
-            if (TryTakeEnemyAIAction(enemyUnit, onEnemyAIActionComplete))
+            if (TryTakeEnemyAIAction(unit, onEnemyAIActionComplete))
             {
-                OnActionStarted?.Invoke(enemyUnit);
+                OnActionStarted?.Invoke(unit);
                 return true;
             }
         }
