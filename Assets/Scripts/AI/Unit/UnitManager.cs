@@ -6,9 +6,12 @@ using UnityEngine;
 public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance { get; private set; }
+
+    public event Action<bool> OnAllEnemiesDead; 
     private List<Unit> unitList;
     private List<Unit> friendlyUnitList;
     private List<Unit> enemyUnitList;
+    
 
     private void Awake()
     {
@@ -23,6 +26,7 @@ public class UnitManager : MonoBehaviour
         unitList = new List<Unit>();
         friendlyUnitList = new List<Unit>();
         enemyUnitList = new List<Unit>();
+        Database.Init();
     }
 
     private void Start()
@@ -52,16 +56,17 @@ public class UnitManager : MonoBehaviour
     {
         Unit unit = sender as Unit;
 
-
         unitList.Remove(unit);
 
         if (unit.IsEnemy)
         {
             enemyUnitList.Remove(unit);
+            if (enemyUnitList.Count == 0) OnAllEnemiesDead?.Invoke(true);
         }
         else
         {
             friendlyUnitList.Remove(unit);
+            if (friendlyUnitList.Count == 0) OnAllEnemiesDead?.Invoke(false);
         }
     }
 

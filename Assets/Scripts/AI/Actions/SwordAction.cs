@@ -16,6 +16,7 @@ public class SwordAction : BaseAction
     }
 
     private int maxSwordDistance = 1;
+    public int MaxSwordDistance => maxSwordDistance;
     private State state;
     private float stateTimer;
     private Unit targetUnit;
@@ -129,10 +130,8 @@ public class SwordAction : BaseAction
         ActionStart(onActionComplete);
     }
 
-    public int GetMaxSwordDistance()
+    public int GetTargetCountAtPosition()
     {
-        return maxSwordDistance;
+        return GetValidActionGridPositionList().Count;
     }
-
-
 }

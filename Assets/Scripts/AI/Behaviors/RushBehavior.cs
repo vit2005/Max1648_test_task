@@ -9,14 +9,14 @@ public class RushBehavior : BaseBehavior
     public override int GetValue(out BaseAction action)
     {
         // TODO: check Closeness and then Cluster heuristic to MoveAction, Grenade or SwordAction
-        var distance = unit.GetHeuristic<ClosenessHeuristic>().GetValue();
-        ShootAction shootAction = unit.GetAction<ShootAction>();
-        action = shootAction;
-        var maxDistance = shootAction.MaxShootDistance;
+        var distance = unit.GetHeuristic<ClosestEnemyDistanceHeuristic>().GetValue();
+        action = unit.GetAction<ShootAction>();
+        var maxDistance = (action as ShootAction).MaxShootDistance;
 
-        Debug.Log($"HuntBehavior: \nd:{distance}, max:{maxDistance}");
+        Debug.Log($"RushBehavior: \nd:{distance}, max:{maxDistance}");
         float percentage = (float)distance / maxDistance;
-        if (distance < maxDistance) return (int)((1f - percentage) * 50);
+        if (distance < maxDistance && (action as ShootAction).GetTargetCountAtPosition(unit.GetGridPosition()) > 0) 
+            return (int)((1f - percentage) * 50);
         action = unit.GetAction<SpinAction>();
         return 0;
     }

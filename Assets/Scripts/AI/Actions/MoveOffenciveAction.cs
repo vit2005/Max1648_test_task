@@ -117,7 +117,7 @@ public class MoveOffenciveAction : BaseAction
 
     }
 
-    private List<GridPosition> ShortestPathToEnemy()
+    protected List<GridPosition> ShortestPathToEnemy()
     {
         GridPosition unitGridPosition = unit.GetGridPosition();
 
@@ -144,9 +144,6 @@ public class MoveOffenciveAction : BaseAction
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
     {
         int actionValue = 0;
-        var distance = gridPosition.DistanceTo(unit.GetGridPosition());
-        //if (distance < unit.GetAction<ShootAction>().MaxShootDistance)
-        //    actionValue = 
 
         int targetCountAtGridPosition = unit.GetAction<ShootAction>().GetTargetCountAtPosition(gridPosition);
 

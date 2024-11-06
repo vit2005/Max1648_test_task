@@ -10,6 +10,7 @@ public class TurnSystem : MonoBehaviour
     public event EventHandler OnTurnChanged;
 
     private int turnNumber = 1;
+    public int Turn => turnNumber;
     private bool isPlayerTurn = true;
 
     private void Awake()

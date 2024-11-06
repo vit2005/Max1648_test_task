@@ -194,11 +194,6 @@ public class ShootAction : BaseAction
         return targetUnit;
     }
 
-    public int GetMaxShootDistance()
-    {
-        return maxShootDistance;
-    }
-
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
     {
         Unit targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);

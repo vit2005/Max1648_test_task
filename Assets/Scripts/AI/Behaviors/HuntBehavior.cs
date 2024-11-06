@@ -12,10 +12,10 @@ public class HuntBehavior : BaseBehavior
         // Check Superiority to MoveAction (InteractAction)
         var superiority = unit.GetHeuristic<SuperiorityHeuristic>().GetValue();
         Debug.Log($"HuntBehavior: \ns:{superiority}");
-        if (superiority > 4)
+        if (superiority > 0)
         {
             action = unit.GetAction<MoveOffenciveAction>();
-            return 50;
+            return superiority * 5;
         }
 
         return 0;

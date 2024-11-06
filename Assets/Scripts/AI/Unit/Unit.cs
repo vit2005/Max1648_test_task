@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -19,29 +20,34 @@ public class Unit : MonoBehaviour
     private GridPosition gridPosition;
     private HealthSystem healthSystem;
     private BaseAction[] baseActionArray;
-    private List<BaseHeuristic> baseHeuristicArray;
-    private List<BaseBehavior> baseBehaviorsArray;
+    private List<BaseHeuristic> baseHeuristicsList;
+    private List<BaseBehavior> baseBehaviorsList;
     private int actionPoints = ACTION_POINTS_MAX;
+    private TrainingDataCreator trainingDataCreator;
+    private List<TrainingData> trainingDataList;
 
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
         baseActionArray = GetComponents<BaseAction>();
-        baseHeuristicArray = new List<BaseHeuristic>
+        baseHeuristicsList = new List<BaseHeuristic>
         {
-            new ClosenessHeuristic(this),
-            new ClusterHeuristic(this),
+            new AverageTeamatesDistanceHeuristic(this),
+            new AverageEnemyDistanceHeuristic(this),
+            new ClosestEnemyDistanceHeuristic(this),
             new CoverHeuristic(this),
             new HealthHeuristic(this),
             new SuperiorityHeuristic(this)
         };
-        baseBehaviorsArray = new List<BaseBehavior>()
+        baseBehaviorsList = new List<BaseBehavior>()
         {
             new HideBehavior(this),
             new HuntBehavior(this),
             new RushBehavior(this),
-            new ShootClosestEnemyBehavior(this),
+            new HitClosestEnemyBehavior(this),
         };
+        trainingDataCreator = new TrainingDataCreator();
+        trainingDataList = new List<TrainingData>();
     }
     private void Start()
     {
@@ -53,6 +59,7 @@ public class Unit : MonoBehaviour
 
         OnAnyUnitSpawned?.Invoke(this, EventArgs.Empty);
     }
+
     private void Update()
     {
         GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
@@ -79,7 +86,7 @@ public class Unit : MonoBehaviour
 
     public T GetHeuristic<T>() where T : BaseHeuristic
     {
-        foreach (BaseHeuristic baseHeuristic in baseHeuristicArray)
+        foreach (BaseHeuristic baseHeuristic in baseHeuristicsList)
         {
             if (baseHeuristic is T)
             {
@@ -104,14 +111,41 @@ public class Unit : MonoBehaviour
         return baseActionArray;
     }
 
-    public void DebugBestBehavior()
+    public List<BaseHeuristic> GetBaseHeuristicsList()
+    {
+        return baseHeuristicsList;
+    }
+
+    public List<BaseBehavior> GetBaseBehaviorList()
+    {
+        return baseBehaviorsList;
+    }
+
+    public void DebugAllBehaviors()
     {
         Debug.Log(gameObject.name);
-        foreach(var behavior in baseBehaviorsArray)
+        foreach(var behavior in baseBehaviorsList)
         {
-            Debug.Log(behavior.GetType() + ":  " + behavior.GetValue(out _));
+            Debug.Log(behavior.GetType() + ":  " + behavior.GetValue(out BaseAction action) + ": " + action.GetType());
         }
         Debug.Log("------------------------");
+    }
+
+    public void Log(int turn, BaseBehavior behavior)
+    {
+        var trainingData = trainingDataCreator.Generate(turn, this, behavior);
+        trainingDataList.Add(trainingData);
+    }
+
+    public void SetReward(int reward)
+    {
+        var trainingData = trainingDataList.LastOrDefault();
+        if (trainingData != null) trainingData.SetReward(reward);
+    }
+
+    public void Save()
+    {
+        Database.SaveTrainingData(gameObject.name, trainingDataList);
     }
 
     public bool TrySpendActionPointsToTakeAction(BaseAction baseAction)
@@ -170,6 +204,13 @@ public class Unit : MonoBehaviour
             UnitManager.Instance.GetEnemyUnitList();
     }
 
+    public List<Unit> GetFriendsList()
+    {
+        return IsEnemy ?
+            UnitManager.Instance.GetEnemyUnitList() :
+            UnitManager.Instance.GetFriendlyUnitList();
+    }
+
     public Unit GetClosestEnemy()
     {
         List<Unit> enemiesList = GetEnemiesList();
@@ -189,7 +230,7 @@ public class Unit : MonoBehaviour
     private void HealthSystem_OnDead(object sender, EventArgs e)
     {
         LevelGrid.Instance.RemoveUnitAtGridPosition(gridPosition, this);
-
+        Save();
         Destroy(gameObject);
 
 

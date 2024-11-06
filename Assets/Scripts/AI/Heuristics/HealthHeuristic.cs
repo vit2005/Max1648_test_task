@@ -9,6 +9,6 @@ public class HealthHeuristic : BaseHeuristic
     public override int GetValue()
     {
         // якщо здоров'€ низьке, евристика даЇ менше значенн€
-        return (int)unit.GetHealthNormalized();
+        return (int)(unit.GetHealthNormalized()*100f);
     }
 }

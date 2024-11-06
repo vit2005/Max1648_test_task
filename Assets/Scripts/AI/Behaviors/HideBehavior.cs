@@ -9,21 +9,21 @@ public class HideBehavior : BaseBehavior
     public override int GetValue(out BaseAction action)
     {
         // TODO: check Superiority and Health heuristics, than Cover to SpinAction or MoveAction
-        action = unit.GetAction<SpinAction>();
+        action = unit.GetAction<MoveDefenciveAction>();
         var superiority = unit.GetHeuristic<SuperiorityHeuristic>().GetValue();
         var health = unit.GetHeuristic<HealthHeuristic>().GetValue();
 
         Debug.Log($"HideBehavior: \ns:{superiority}, h:{health}");
 
-        if (superiority < -3 || health <= 0.31f)
+        if (superiority < -3 || health <= 31)
         {
             var cover = unit.GetHeuristic<CoverHeuristic>().GetValue();
-            if (cover == 1) return 0;
+            if (cover == 0) return 70;
 
-            action = unit.GetAction<MoveOffenciveAction>();
-            return 70;
+            action = unit.GetAction<SpinAction>();
+            return 10;
         }
 
-        return 0;
+        return 10;
     }
 }

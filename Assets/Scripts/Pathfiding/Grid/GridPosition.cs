@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
+[Serializable]
 public struct GridPosition : IEquatable<GridPosition>
 {
     public int x;
