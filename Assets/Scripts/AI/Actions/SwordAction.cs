@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SwordAction : BaseAction
 {
+    public override bool IsPlayerPlayable => true;
+
     public static event EventHandler OnAnySwordHit;
     public event EventHandler OnSwordActionStarted;
     public event EventHandler OnSwordActionCompleted;

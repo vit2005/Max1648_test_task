@@ -25,12 +25,27 @@ public class UnitActionSystemUI : MonoBehaviour
         UnitActionSystem.Instance.OnActionStarted += UnitActionSystem_OnActionStarted;
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         Unit.OnAnyActionPointsChanged += Unit_OnAnyActionPointsChanged;
+        Unit.OnAnyUnitDead += Unit_OnAnyUnitDead;
 
         UpdateActionPoints();
         CreateUnitActionButtons();
         UpdateSelectedVisual();
     }
 
+    private void Unit_OnAnyUnitDead(object sender, EventArgs e)
+    {
+        Unit unit = sender as Unit;
+        Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+        if (unit != selectedUnit)
+            return;
+
+        foreach (Transform buttonTransform in actionButtonContainerTransform)
+            Destroy(buttonTransform.gameObject);
+
+        actionButtonUIsList.Clear();
+
+        actionPointsText.text = string.Empty;
+    }
 
     private void CreateUnitActionButtons()
     {
@@ -42,7 +57,7 @@ public class UnitActionSystemUI : MonoBehaviour
         actionButtonUIsList.Clear();
 
         Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
-        foreach (BaseAction baseAction in selectedUnit.GetBaseActionArray())
+        foreach (BaseAction baseAction in selectedUnit.GetPlayerPlayableBaseActionArray())
         {
             Transform actionButtonTransform = Instantiate(actionButtonPrefab, actionButtonContainerTransform);
             ActionButtonUI actionButtonUI = actionButtonTransform.GetComponent<ActionButtonUI>();

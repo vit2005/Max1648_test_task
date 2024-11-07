@@ -7,6 +7,7 @@ public class InteractAction : BaseAction
 {
 
     public int maxInteractDistance = 1;
+    public override bool IsPlayerPlayable => false;
 
     private void Update()
     {

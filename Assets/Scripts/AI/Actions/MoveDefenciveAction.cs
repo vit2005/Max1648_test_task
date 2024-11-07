@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MoveDefenciveAction : MoveOffenciveAction
 {
+    public override bool IsPlayerPlayable => false;
+
     public override EnemyAIAction GetEnemyAIAction(GridPosition gridPosition)
     {
         int actionValue = 0;

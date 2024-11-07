@@ -112,6 +112,11 @@ public class Unit : MonoBehaviour
         return baseActionArray;
     }
 
+    public BaseAction[] GetPlayerPlayableBaseActionArray()
+    {
+        return baseActionArray.Where(x => x.IsPlayerPlayable).ToArray();
+    }
+
     public List<BaseHeuristic> GetBaseHeuristicsList()
     {
         return baseHeuristicsList;

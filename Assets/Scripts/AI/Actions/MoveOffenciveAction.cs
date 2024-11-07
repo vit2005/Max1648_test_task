@@ -7,6 +7,8 @@ using UnityEngine;
 public class MoveOffenciveAction : BaseAction
 {
     [SerializeField] private int maxMoveDistance = 4;
+
+    public override bool IsPlayerPlayable => true;
     private float moveSpeed = 10f;
     private float rotateSpeed = 10f;
     public int MaxMoveDistance => maxMoveDistance;

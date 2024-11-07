@@ -11,6 +11,7 @@ public abstract class BaseAction : MonoBehaviour
     protected Unit unit;
     protected bool isActive;
     protected Action onActionComplete;
+    public abstract bool IsPlayerPlayable { get; }
 
     protected virtual void Awake()
     {

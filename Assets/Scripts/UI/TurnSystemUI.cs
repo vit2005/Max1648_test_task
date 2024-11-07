@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class TurnSystemUI : MonoBehaviour
 {
@@ -19,10 +20,22 @@ public class TurnSystemUI : MonoBehaviour
         });
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
+        UnitManager.Instance.OnAllEnemiesDead += Instance_OnAllEnemiesDead;
 
         UpdateTurnText();
         UpdateEnemyTurnVisual();
         UpdateEndTurnButtonVisibility();
+    }
+
+    private void Instance_OnAllEnemiesDead(bool obj)
+    {
+        StartCoroutine(DelayedEnd());
+    }
+
+    private IEnumerator DelayedEnd()
+    {
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(0);
     }
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e)

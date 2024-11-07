@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ShootAction : BaseAction
 {
+    public override bool IsPlayerPlayable => true;
 
     public static event EventHandler<OnShootEventArgs> OnAnyShoot;
     public event EventHandler<OnShootEventArgs> OnShoot;

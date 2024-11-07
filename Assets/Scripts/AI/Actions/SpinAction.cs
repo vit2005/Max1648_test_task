@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SpinAction : BaseAction
 {
+    public override bool IsPlayerPlayable => true;
+
     public delegate void SpinCompleteDelegate();
     private float totalSpinAmount;
 

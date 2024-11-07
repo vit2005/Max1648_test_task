@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -28,8 +29,18 @@ public class UnitActionSystem : MonoBehaviour
             return;
         }
         Instance = this;
+
+        Unit.OnAnyUnitDead += Unit_OnAnyUnitDead;
     }
 
+    private void Unit_OnAnyUnitDead(object sender, EventArgs e)
+    {
+        Unit unit = sender as Unit;
+        if (unit != selectedUnit)
+            return;
+
+        SetSelectedUnit(UnitManager.Instance.GetFriendlyUnitList().First());
+    }
 
     private void Start()
     {
@@ -79,7 +90,6 @@ public class UnitActionSystem : MonoBehaviour
                     OnActionStarted?.Invoke(this, EventArgs.Empty);
                 }
             }
-
         }
     }
 
@@ -99,10 +109,8 @@ public class UnitActionSystem : MonoBehaviour
 
     private bool TryHandleUnitSelection()
     {
-
         if (InputManager.Instance.IsMouseButtonDownThisFrame())
         {
-
             Ray ray = Camera.main.ScreenPointToRay(InputManager.Instance.GetMouseScreenPosition());
             if (Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, unitLayerMask))
             {
