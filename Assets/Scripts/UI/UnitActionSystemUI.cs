@@ -20,6 +20,8 @@ public class UnitActionSystemUI : MonoBehaviour
 
     private void Start()
     {
+        if (PlayerPrefs.GetInt("isAuto") == 1) return;
+
         UnitActionSystem.Instance.OnSelectedUnitChanged += UnitActionSystem_OnSelectedUnitChanged;
         UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
         UnitActionSystem.Instance.OnActionStarted += UnitActionSystem_OnActionStarted;

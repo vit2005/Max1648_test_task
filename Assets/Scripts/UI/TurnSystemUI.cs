@@ -12,12 +12,16 @@ public class TurnSystemUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI turnNumberText;
     [SerializeField] private GameObject enemyTurnVisualGameObject;
 
+    private bool _isAuto = false;
+
     private void Start()
     {
         endTurnBtn.onClick.AddListener(() =>
         {
             TurnSystem.Instance.NextTurn();
         });
+
+        _isAuto = PlayerPrefs.GetInt("isAuto") == 1;
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         UnitManager.Instance.OnAllEnemiesDead += Instance_OnAllEnemiesDead;
@@ -35,6 +39,11 @@ public class TurnSystemUI : MonoBehaviour
     private IEnumerator DelayedEnd()
     {
         yield return new WaitForSeconds(2f);
+        EndGame();
+    }
+
+    public void EndGame()
+    {
         SceneManager.LoadScene(0);
     }
 
@@ -58,7 +67,7 @@ public class TurnSystemUI : MonoBehaviour
 
     private void UpdateEndTurnButtonVisibility()
     {
-        endTurnBtn.gameObject.SetActive(TurnSystem.Instance.IsPlayerTurn());
+        endTurnBtn.gameObject.SetActive(TurnSystem.Instance.IsPlayerTurn() && !_isAuto);
     }
 
 

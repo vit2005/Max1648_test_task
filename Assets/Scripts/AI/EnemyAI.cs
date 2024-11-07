@@ -27,11 +27,19 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        if (!isEnemy && PlayerPrefs.GetInt("isAuto") == 0)
+        if (!isEnemy)
         {
-            enabled = false;
-            return;
+            if (PlayerPrefs.GetInt("isAuto") == 0)
+            {
+                enabled = false;
+                return;
+            }
+            else
+            {
+                TurnSystem_OnTurnChanged(null, null);
+            }
         }
+        
 
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         UnitManager.Instance.OnAllEnemiesDead += Instance_OnAllEnemiesDead;
