@@ -27,6 +27,12 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        if (!isEnemy && PlayerPrefs.GetInt("isAuto") == 0)
+        {
+            enabled = false;
+            return;
+        }
+
         TurnSystem.Instance.OnTurnChanged += TurnSystem_OnTurnChanged;
         UnitManager.Instance.OnAllEnemiesDead += Instance_OnAllEnemiesDead;
     }
@@ -254,4 +260,14 @@ public class EnemyAI : MonoBehaviour
             return bestBehavior;
         }
     }
+
+    // greater value means player plays more aggressive now in conparison to average
+    public int CompareAggressiveness()
+    {
+        int predictedAverageHealth = Prediction.Instance.GetAverageTotalPlayerHealth(TurnSystem.Instance.Turn-1);
+        var currentAverageHealth = UnitManager.Instance.GetFriendlyUnitList()[0].GetHeuristic<TotalHealthHeuristic>().GetValue();
+        
+        return predictedAverageHealth - currentAverageHealth;
+    }
+
 }

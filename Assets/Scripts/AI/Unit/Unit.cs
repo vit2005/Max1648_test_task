@@ -37,7 +37,8 @@ public class Unit : MonoBehaviour
             new ClosestEnemyDistanceHeuristic(this),
             new CoverHeuristic(this),
             new HealthHeuristic(this),
-            new SuperiorityHeuristic(this)
+            new SuperiorityHeuristic(this),
+            new TotalHealthHeuristic(this)
         };
         baseBehaviorsList = new List<BaseBehavior>()
         {

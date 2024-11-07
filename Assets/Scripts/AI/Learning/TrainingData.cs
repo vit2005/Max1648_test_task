@@ -26,6 +26,7 @@ public enum HeuristicType
     Cover = 4,
     Health = 5,
     Superiority = 6,
+    TotalHealth = 7,
 
 }
 
@@ -82,10 +83,12 @@ public class TrainingData
 [Serializable]
 public class TrainingDataWrapper
 {
+    public string botTitle;
     public List<TrainingData> trainingDataList;
 
-    public TrainingDataWrapper(List<TrainingData> trainingDataList)
+    public TrainingDataWrapper(string botTitle, List<TrainingData> trainingDataList)
     {
+        this.botTitle = botTitle;
         this.trainingDataList = trainingDataList;
     }
 }

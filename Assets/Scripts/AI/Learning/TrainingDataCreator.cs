@@ -43,6 +43,8 @@ public class TrainingDataCreator
             return HeuristicType.Health;
         else if (heuristic is SuperiorityHeuristic)
             return HeuristicType.Superiority;
+        else if (heuristic is TotalHealthHeuristic)
+            return HeuristicType.TotalHealth;
         else
             throw new ArgumentException("Unknown heuristic type");
     }

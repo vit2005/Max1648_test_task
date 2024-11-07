@@ -6,6 +6,7 @@ using UnityEngine;
 
 public static class Database
 {
+    private static string baseFilePath = Application.dataPath + "/TrainingData/";
     private static string filePath = Application.dataPath + "/TrainingData/";
 
     public static void Init()
@@ -16,18 +17,28 @@ public static class Database
 
     public static void SaveTrainingData(string botId, List<TrainingData> trainingLog)
     {
-        string json = JsonUtility.ToJson(new TrainingDataWrapper(trainingLog));
+        string json = JsonUtility.ToJson(new TrainingDataWrapper(botId, trainingLog));
         File.WriteAllText(filePath + botId, json);
     }
 
-    public static List<TrainingData> LoadTrainingData(string botId)
+    public static List<TrainingDataWrapper> LoadTrainingData()
     {
-        if (File.Exists(filePath + botId))
+        List<TrainingDataWrapper> result = new List<TrainingDataWrapper>();
+
+        var directories = Directory.GetDirectories(baseFilePath);
+        foreach (var folder in directories)
         {
-            string json = File.ReadAllText(filePath + botId);
-            TrainingDataWrapper dataWrapper = JsonUtility.FromJson<TrainingDataWrapper>(json);
-            return dataWrapper.trainingDataList;
+            var files = Directory.GetFiles(folder);
+            foreach (var item in files)
+            {
+                if (item.Contains(".meta")) continue;
+
+                string json = File.ReadAllText(item);
+                TrainingDataWrapper dataWrapper = JsonUtility.FromJson<TrainingDataWrapper>(json);
+                result.Add(dataWrapper);
+            }
         }
-        return new List<TrainingData>();
+
+        return result;
     }
 }

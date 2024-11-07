@@ -7,6 +7,8 @@ using UnityEngine;
 public class MoveOffenciveAction : BaseAction
 {
     [SerializeField] private int maxMoveDistance = 4;
+    private float moveSpeed = 10f;
+    private float rotateSpeed = 10f;
     public int MaxMoveDistance => maxMoveDistance;
 
     public event EventHandler OnStartMoving;
@@ -25,17 +27,12 @@ public class MoveOffenciveAction : BaseAction
         Vector3 targetPosition = positionList[currentPositionIndex];
         Vector3 moveDirection = (targetPosition - transform.position).normalized;
 
-        float rotateSpeed = 10f;
         transform.forward = Vector3.Lerp(transform.forward, moveDirection, Time.deltaTime * rotateSpeed);
-
 
         float stoppingDistance = .1f;
         if (Vector3.Distance(transform.position, targetPosition) > stoppingDistance)
         {
-            float moveSpeed = 4f;
             transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-
         }
         else
         {
