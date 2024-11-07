@@ -49,7 +49,11 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-
+    private void OnDestroy()
+    {
+        BaseAction.OnAnyActionStarted -= BaseAction_OnAnyActionStarted;
+        BaseAction.OnAnyActionCompleted -= BaseAction_OnAnyActionCompleted;
+    }
 
     private void BaseAction_OnAnyActionCompleted(object sender, EventArgs e)
     {

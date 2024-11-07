@@ -8,6 +8,13 @@ public class PauseUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI pauseText;
     private bool _isPaused = false;
 
+    public void Start()
+    {
+        _isPaused = false;
+        pauseText.text = "Pause";
+        Time.timeScale = 1.0f;
+    }
+
     public void Pause()
     {
         _isPaused = !_isPaused;
