@@ -13,10 +13,16 @@ public class UnitAnimator : MonoBehaviour
 
     private void Awake()
     {
-        if (TryGetComponent<MoveOffenciveAction>(out MoveOffenciveAction moveAction))
+        if (TryGetComponent<MoveOffenciveAction>(out MoveOffenciveAction moveOffenciveAction))
         {
-            moveAction.OnStartMoving += MoveAction_OnStartMoving;
-            moveAction.OnStopMoving += MoveAction_OnStopMoving;
+            moveOffenciveAction.OnStartMoving += MoveAction_OnStartMoving;
+            moveOffenciveAction.OnStopMoving += MoveAction_OnStopMoving;
+        }
+
+        if (TryGetComponent<MoveDefenciveAction>(out MoveDefenciveAction moveDefenciveAction))
+        {
+            moveDefenciveAction.OnStartMoving += MoveAction_OnStartMoving;
+            moveDefenciveAction.OnStopMoving += MoveAction_OnStopMoving;
         }
 
         if (TryGetComponent<ShootAction>(out ShootAction shootAction))

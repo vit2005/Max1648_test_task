@@ -39,7 +39,7 @@ public class UnitActionSystem : MonoBehaviour
         if (unit != selectedUnit)
             return;
 
-        SetSelectedUnit(UnitManager.Instance.GetFriendlyUnitList().First());
+        SetSelectedUnit(UnitManager.Instance.GetFriendlyUnitList().Where(x => x != unit).First());
     }
 
     private void Start()
